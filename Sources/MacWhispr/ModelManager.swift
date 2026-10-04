@@ -23,15 +23,24 @@ enum ModelManager {
     }
     static func url(for model: WhisperModel) -> URL { directory.appendingPathComponent(model.filename) }
     static func isInstalled(_ model: WhisperModel) -> Bool {
-        let url = url(for: model)
+        isValidFile(url(for: model), model: model)
+    }
+    private static func isValidFile(_ url: URL, model: WhisperModel) -> Bool {
         guard let attributes = try? FileManager.default.attributesOfItem(atPath: url.path), let size = attributes[.size] as? NSNumber else { return false }
-        return size.int64Value > 1_000_000
+        guard size.int64Value > Int64(Double(model.sizeMB) * 800_000), let file = try? FileHandle(forReadingFrom: url) else { return false }
+        defer { try? file.close() }
+        return (try? file.read(upToCount: 4)) == Data([0x6c, 0x6d, 0x67, 0x67])
     }
     static func download(_ model: WhisperModel, progress: @escaping (Double) -> Void) async throws {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let source = URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/\(model.filename)")!
         let (temporary, response) = try await URLSession.shared.download(from: source, delegate: ProgressDelegate(progress))
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw MacWhisprError("Model download failed. Check your connection and try again.") }
+        guard isValidFile(temporary, model: model) else { throw MacWhisprError("Downloaded model is incomplete or invalid. Try downloading it again.") }
+        let size = try temporary.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+        guard response.expectedContentLength <= 0 || Int64(size) == response.expectedContentLength else {
+            throw MacWhisprError("Model download did not finish. Check your connection and try again.")
+        }
         let destination = url(for: model)
         try? FileManager.default.removeItem(at: destination)
         try FileManager.default.moveItem(at: temporary, to: destination)

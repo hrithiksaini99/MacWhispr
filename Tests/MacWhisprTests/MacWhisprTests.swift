@@ -1,4 +1,5 @@
 import XCTest
+import Carbon
 @testable import MacWhispr
 
 final class MacWhisprTests: XCTestCase {
@@ -14,5 +15,14 @@ final class MacWhisprTests: XCTestCase {
         XCTAssertEqual(ActivationMode.current, .pushToTalk)
         ActivationMode.current = .toggle
         XCTAssertEqual(ActivationMode.current, .toggle)
+    }
+
+    func testShortcutPersistenceAndDisplay() {
+        let previous = HotKeyShortcut.current
+        defer { HotKeyShortcut.current = previous }
+        let shortcut = HotKeyShortcut(keyCode: 49, modifiers: UInt32(controlKey | optionKey), keyLabel: "Space")
+        HotKeyShortcut.current = shortcut
+        XCTAssertEqual(HotKeyShortcut.current, shortcut)
+        XCTAssertEqual(shortcut.displayName, "⌃⌥Space")
     }
 }

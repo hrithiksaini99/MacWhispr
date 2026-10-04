@@ -23,13 +23,15 @@ final class DictationService: NSObject, AVAudioRecorderDelegate {
         self.recorder = recorder
         recordingURL = url
         peak = -160
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.05, repeats: true) { [weak self] _ in
             guard let self, let recorder = self.recorder else { return }
             recorder.updateMeters()
             let level = recorder.peakPower(forChannel: 0)
             self.peak = max(self.peak, level)
             self.onLevel?(level)
         }
+        self.timer = timer
+        RunLoop.main.add(timer, forMode: .common)
     }
     func stop() -> (URL, Float)? {
         timer?.invalidate(); timer = nil
@@ -37,33 +39,6 @@ final class DictationService: NSObject, AVAudioRecorderDelegate {
         guard let url = recordingURL else { return nil }
         recordingURL = nil
         return (url, peak)
-    }
-}
-
-enum Transcriber {
-    static func binaryURL() -> URL? {
-        let env = ProcessInfo.processInfo.environment["MACWHISPR_WHISPER"]
-        let candidates = [env, "/opt/homebrew/bin/whisper-cli", "/usr/local/bin/whisper-cli"].compactMap { $0 }
-        return candidates.map(URL.init(fileURLWithPath:)).first { FileManager.default.isExecutableFile(atPath: $0.path) }
-    }
-    static func transcribe(audio: URL, model: WhisperModel) async throws -> String {
-        guard let binary = binaryURL() else { throw MacWhisprError("whisper-cli is missing. Install it with: brew install whisper.cpp") }
-        guard ModelManager.isInstalled(model) else { throw MacWhisprError("Download the selected model from the menu first.") }
-        return try await Task.detached(priority: .userInitiated) {
-            let process = Process()
-            let output = Pipe(); let errors = Pipe()
-            process.executableURL = binary
-            process.arguments = ["-m", ModelManager.url(for: model).path, "-f", audio.path, "-nt", "-np"]
-            process.standardOutput = output; process.standardError = errors
-            try process.run()
-            let stdout = output.fileHandleForReading.readDataToEndOfFile()
-            let stderr = errors.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
-            guard process.terminationStatus == 0 else { throw MacWhisprError("Transcription failed: \(String(data: stderr, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "unknown error")") }
-            let text = (String(data: stdout, encoding: .utf8) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !text.isEmpty else { throw MacWhisprError("No speech was recognized. Try speaking closer to the microphone.") }
-            return text
-        }.value
     }
 }
 

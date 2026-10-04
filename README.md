@@ -1,208 +1,89 @@
-# MacWhispr
+<p align="center">
+  <img src="Assets/AppIcon.png" alt="MacWhispr icon" width="112">
+</p>
 
-**Speak. Transcribe locally. Paste into your Mac apps.**
+<h1 align="center">MacWhispr</h1>
 
-MacWhispr is a native macOS menu bar dictation app built by [Hrithik Saini](https://github.com/hrithiksaini99). Press **Control–Space**, speak, and press it again to paste your words into the app you were using. Transcription runs on your Mac through [whisper.cpp](https://github.com/ggml-org/whisper.cpp), without an API key or a cloud transcription service.
+<p align="center"><strong>Your thoughts. Already in words.</strong></p>
 
-## Features
+<p align="center">
+  A focused voice dictation companion for macOS. Speak from any app, let a local Whisper model transcribe your words, and continue exactly where you were writing.
+</p>
 
-- **Toggle dictation:** press Control–Space to start and press again to finish.
-- **Push to Talk:** hold Control–Space to record, then release to transcribe.
-- **Automatic paste:** returns to the app that had focus when recording began.
-- **Clipboard fallback:** keeps the transcript available for manual paste when Accessibility access is missing.
-- **Microphone selection:** use the system default or choose an available input device.
-- **Model management:** select and download Whisper models from the menu, with download progress in the menu bar.
-- **Permission status:** check Microphone and Accessibility access and open their settings from the menu.
-- **Silence detection:** skips transcription when the recording contains no detectable speech.
-- **Native menu bar interface:** built with AppKit and Swift, with no Swift package dependencies.
+<p align="center">
+  <a href="https://github.com/hrithiksaini99/MacWhispr/releases">Download MacWhispr</a>
+  ·
+  <a href="site/privacy.html">Privacy</a>
+</p>
 
-## Requirements
+![MacWhispr — local voice dictation for your Mac](site/assets/brand/social-card.png)
 
-| Requirement | Details |
-| --- | --- |
-| Operating system | macOS 13 or later |
-| Swift toolchain | Swift 5.10 or later; Xcode Command Line Tools or Xcode |
-| Transcription engine | `whisper-cli`, installed through Homebrew's `whisper.cpp` formula |
-| Model | At least one downloaded GGML model |
-| Permissions | Microphone for recording; Accessibility for automatic paste |
-| Internet | Needed to install the engine and download models; dictation runs locally afterward |
+## Designed to stay out of the way
 
-The app was built and exercised on an Apple Silicon Mac. Intel compatibility is supported by the package target and binary lookup paths but has not been verified on an Intel Mac.
+MacWhispr is a menu bar app with one purpose: shorten the distance between a thought and written text. It does not open a workspace, move keyboard focus, or ask the user to manage a transcript window.
 
-## Quick start
+The interaction begins with a personalized global shortcut. A compact capsule appears near the bottom of the active display, confirms that the microphone is listening, responds to real audio levels, and changes into a directional transcription signal when recording stops. The finished text is placed into the app that was active when dictation began.
 
-Install the [Xcode Command Line Tools](https://developer.apple.com/xcode/resources/) if they are not already installed, then install the transcription engine using [Homebrew](https://brew.sh/):
+The shortcut, microphone, model, and activation style all belong to the user. Toggle mode works like a switch. Push to Talk records only while the shortcut is held.
 
-```bash
-xcode-select --install
-brew install whisper.cpp
-```
+## The visual system
 
-Clone the repository and launch the app:
+The capsule uses a graphite surface, a mint signal color, and a custom W voice mark shared with the application icon. Its small footprint keeps it visible without competing with the document beneath it.
 
-```bash
-git clone https://github.com/hrithiksaini99/MacWhispr.git
-cd MacWhispr
-./script/build_and_run.sh
-```
+| State | Visual response | Meaning |
+| --- | --- | --- |
+| Listening | Audio bars follow the microphone every 50 ms | Recording is active |
+| Transcribing | Three fast directional traces cross the signal well | Local speech processing is active |
+| Inserted | A mint confirmation replaces the signal | Text has reached the active app |
+| Action required | A warm status treatment appears | The notification contains the next step |
 
-The script builds the Swift package, assembles and signs `dist/MacWhispr.app` for local use, and launches it. A waveform icon appears in the macOS menu bar. There is no Dock icon or main window.
+Motion communicates activity without inventing progress. Transcription traces repeat instead of filling toward a false percentage, and the completion state appears only after paste succeeds. Reduce Motion replaces continuous movement with clear static states.
 
-1. Allow **Microphone** access when prompted.
-2. Enable **MacWhispr** in **System Settings → Privacy & Security → Accessibility** for automatic paste.
-3. Open the waveform menu and choose a model under **Model**. The default is **Base (English)**. Selecting a model that is not installed starts its download.
-4. Focus a text field in another app.
-5. Press **Control–Space**, speak, and press **Control–Space** again. MacWhispr transcribes and pastes the result.
+## Built as a native Mac utility
 
-To use **Push to Talk**, choose it under **Activation Mode**, then hold the shortcut while speaking and release it when finished. Notifications are optional and are used for error messages.
-
-## Models
-
-Models download from the [whisper.cpp model repository on Hugging Face](https://huggingface.co/ggerganov/whisper.cpp/tree/main). Sizes below are approximate and match the app's catalog.
-
-| Model | Download | Intended use |
-| --- | ---: | --- |
-| Base (English) | 148 MB | Default; fastest option in the catalog |
-| Small (English) | 488 MB | More accuracy with a modest increase in size |
-| Medium (English) | 1.53 GB | Higher accuracy with more processing and memory |
-| Large v3 Turbo | 1.62 GB | Large model optimized for speed |
-| Large v3 | 3.10 GB | Largest option in the catalog |
-
-Model size and recording length affect memory use and transcription time. The app currently uses whisper-cli's default language behavior and has no language selector.
-
-Model files live at:
-
-```text
-~/Library/Application Support/MacWhispr/models/
-```
-
-Use **Open Model Folder** in the menu to inspect that directory. You can also place a compatible model file there manually using the exact filename listed in `Sources/MacWhispr/ModelManager.swift`.
-
-## How it works
+MacWhispr uses Swift, AppKit, SwiftUI, AVFoundation, Core Audio, Carbon hot keys, and the macOS Accessibility APIs. It has no application framework dependency and no account layer.
 
 ```mermaid
 flowchart LR
-    A[Control–Space] --> B[Record microphone]
-    B --> C[Temporary WAV]
-    C --> D[Local whisper-cli]
-    E[Downloaded model] --> D
-    D --> F[Clipboard]
-    F --> G[Paste into focused app]
+    Shortcut[Personal shortcut] --> Capture[AVFoundation recording]
+    Capture --> Capsule[Focus preserving capsule]
+    Capture --> Engine[Bundled whisper.cpp engine]
+    Model[Downloaded GGML model] --> Engine
+    Engine --> Clipboard[macOS clipboard]
+    Clipboard --> ActiveApp[Original active app]
 ```
 
-Audio is captured as a 16 kHz mono PCM WAV. When recording stops, MacWhispr checks the peak audio level, runs whisper-cli with the selected model, trims the result, and writes it to the clipboard. With Accessibility permission, it activates the original app and sends Command–V.
+The AppKit application delegate owns the menu bar lifecycle, global shortcut registration, recording orchestration, and return to the original app. SwiftUI draws the custom capsule while a narrow `NSPanel` bridge keeps it above other windows without becoming the main window. The shortcut recorder uses a focused AppKit panel because global key capture and Carbon registration are platform responsibilities.
 
-Choosing a specific microphone changes the macOS system default input device through CoreAudio. This can also affect other apps using the system default input.
+The release engine is a pinned static build of whisper.cpp with Accelerate and embedded Metal support. It targets Apple Silicon and links only Apple system libraries. Model files remain separate so each user can choose the balance of speed, memory, language support, and accuracy.
 
-## Privacy and storage
+## Personal shortcut
 
-- Audio and transcription are processed locally; recordings are not uploaded for transcription.
-- Model downloads contact Hugging Face and its download infrastructure.
-- Temporary recordings are removed after transcription succeeds or fails. Abrupt termination can leave temporary files behind.
-- There is no account system, analytics, or transcript history database.
-- The latest transcript remains on the macOS clipboard and is subject to your existing clipboard managers and system clipboard behavior.
-- Successful transcripts are written to standard output; errors and app events are available through local logging. Consider this when capturing debugging output.
-- Activation mode, selected model, and preferred input device are stored in macOS `UserDefaults`.
+The menu displays the active shortcut and opens a native recorder for changing it. A shortcut must include Command, Option, or Control so ordinary typing is never captured globally. MacWhispr attempts to register the new combination before saving it. When another app or macOS already owns that combination, the recorder stays open and the previous shortcut is restored when the panel closes.
 
-## Development
+The default is **Control–Space**. Personalized shortcuts persist across launches and work with both Toggle and Push to Talk modes.
 
-```bash
-# Compile without launching
-swift build
+## Local processing and privacy
 
-# Build and launch the app bundle
-./script/build_and_run.sh
+Audio is recorded into a temporary 16 kHz mono WAV and passed to the speech engine on the same Mac. Model downloads contact Hugging Face, but recordings are not uploaded for transcription. MacWhispr has no analytics integration, transcript database, cloud transcription API, account, or API key.
 
-# Build, launch, and verify that the process starts
-./script/build_and_run.sh --verify
+Temporary audio and engine output are removed after success, failure, or cancellation. The latest transcript remains on the macOS clipboard, where an installed clipboard manager may retain it. Successful transcripts are not printed to application logs.
 
-# Stream app logs
-./script/build_and_run.sh --logs
+Automatic insertion requires Accessibility permission because macOS protects control of other applications. Without that permission, the transcript remains available for manual paste. Selecting a microphone changes the system default input and can affect other apps that follow that setting.
 
-# Stream MacWhispr's dictation events
-./script/build_and_run.sh --telemetry
+## Product structure
 
-# Launch under LLDB
-./script/build_and_run.sh --debug
-```
+- `ActivationMode` and `HotKeyShortcut` hold durable user preferences.
+- `DictationService` records and meters audio.
+- `Transcriber` owns the external process, timeout, cancellation, and bounded diagnostics.
+- `ModelManager` downloads and validates GGML models before installation.
+- `MenuBarController` presents status, device, model, mode, permission, and shortcut controls.
+- `DictationCapsuleController` owns the focus preserving floating panel.
+- `DictationCapsuleView` and `CapsuleSignalView` draw the branded recording experience.
+- `site` contains the responsive marketing site, illustrative product demo, setup, privacy, terms, and 404 pages.
 
-The Codex **Run** action is configured in `.codex/environments/environment.toml` and uses the same build script. The script stops an existing MacWhispr process before rebuilding; finish any active dictation first.
+## Availability
 
-The generated bundle is signed ad hoc for local development. It is not notarized or packaged as a distributable release.
+MacWhispr 0.2 is prepared for Apple Silicon Macs and targets macOS 13 or later. The downloadable production build will be published on the [Releases page](https://github.com/hrithiksaini99/MacWhispr/releases) after Developer ID signing, notarization, and oldest supported system testing are complete.
 
-### Tests
-
-Run the local transcription integration check after downloading **Base (English)**:
-
-```bash
-./script/test_transcription.sh
-```
-
-This creates a spoken sample with macOS `say`, converts it to WAV, runs the installed Whisper engine, and checks that the expected phrase is recognized. It does not record your microphone or exercise automatic paste.
-
-The Swift test target checks catalog identifiers and activation-mode persistence:
-
-```bash
-swift test
-```
-
-This requires a toolchain with XCTest available, typically a full Xcode installation. On the development Mac, the Command Line Tools installation could build the app but could not resolve XCTest, so the Swift tests were not executed there. The build, app launch, signature check, and transcription integration check passed. Interactive dictation was also confirmed working by the app's author.
-
-For an interactive acceptance check, use a blank text document and verify Toggle recording, Push to Talk, automatic paste, and the silence error with a muted microphone.
-
-## Configuration
-
-MacWhispr finds the transcription executable in this order:
-
-1. The `MACWHISPR_WHISPER` environment variable, if it points to an executable.
-2. `/opt/homebrew/bin/whisper-cli` on Apple Silicon.
-3. `/usr/local/bin/whisper-cli` on Intel.
-
-For a custom installation, Finder-launched apps need the variable in the launch environment:
-
-```bash
-launchctl setenv MACWHISPR_WHISPER /absolute/path/to/whisper-cli
-```
-
-Quit and relaunch MacWhispr after setting it. To remove the override:
-
-```bash
-launchctl unsetenv MACWHISPR_WHISPER
-```
-
-## Troubleshooting
-
-| Symptom | What to check |
-| --- | --- |
-| Control–Space does nothing | Check **System Settings → Keyboard → Keyboard Shortcuts → Input Sources** for a conflicting shortcut. The app currently uses a fixed shortcut. |
-| Microphone access is required | Enable MacWhispr under **Privacy & Security → Microphone**, then restart the app if needed. |
-| Text is copied but not pasted | Enable MacWhispr under **Privacy & Security → Accessibility**, or paste manually with Command–V. Some apps and secure input fields may reject synthesized paste. |
-| Selected microphone is unavailable | Reconnect it or choose **System Default** under **Input Device**. |
-| No speech is detected | Confirm the correct input is selected, unmute the microphone, and speak closer to it. |
-| whisper-cli is missing | Run `brew install whisper.cpp`, or configure `MACWHISPR_WHISPER`. |
-| Model download fails | Check your network's access to Hugging Face and available disk space. Retry from the model menu. |
-| Transcription fails after a model download | Remove the incomplete model from **Open Model Folder** and select the model again to download it. |
-| Permissions stop working after rebuilding | Ad hoc signing can cause stale permission grants. Remove and re-add MacWhispr in the affected privacy setting. |
-| `swift test` cannot find XCTest | Use a full Xcode toolchain; the transcription integration script can run with Command Line Tools. |
-
-## Project structure
-
-```text
-MacWhispr/
-├── Sources/MacWhispr/
-│   ├── main.swift                     # App lifecycle, hotkey, and dictation orchestration
-│   ├── MenuBarController.swift        # Menu bar interface and callbacks
-│   ├── DictationService.swift         # Recording, transcription, and paste
-│   ├── AudioInputDeviceManager.swift  # Microphone discovery and routing
-│   ├── ModelManager.swift             # Model catalog, selection, and downloads
-│   └── ActivationMode.swift           # Persisted recording mode
-├── Tests/MacWhisprTests/              # Swift tests
-├── script/
-│   ├── build_and_run.sh               # Build, package, sign, and launch
-│   └── test_transcription.sh          # Local transcription integration check
-├── .codex/environments/              # Codex Run configuration
-├── Info.plist
-└── Package.swift
-```
-
-Built by **Hrithik Saini**. Speech recognition is powered by the independently maintained **whisper.cpp** project and Whisper model files.
+Copyright © 2026 **Hrithik Saini**. App and brand rights are reserved. whisper.cpp, model files, and Manrope remain under their respective licenses; see [third party notices](docs/THIRD_PARTY_NOTICES.md).

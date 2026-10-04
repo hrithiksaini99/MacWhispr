@@ -8,6 +8,6 @@ TEMP="$(mktemp -d)"
 trap 'rm -rf "$TEMP"' EXIT
 say -o "$TEMP/sample.aiff" 'MacWhispr is working correctly. This is a local transcription test.'
 afconvert -f WAVE -d LEI16@16000 -c 1 "$TEMP/sample.aiff" "$TEMP/sample.wav"
-OUTPUT="$($WHISPER -m "$MODEL" -f "$TEMP/sample.wav" -nt -np 2>"$TEMP/whisper.log")"
+OUTPUT="$("$WHISPER" -m "$MODEL" -f "$TEMP/sample.wav" -nt -np 2>"$TEMP/whisper.log")"
 echo "$OUTPUT"
 echo "$OUTPUT" | tr '[:upper:]' '[:lower:]' | grep -q 'local transcription test'

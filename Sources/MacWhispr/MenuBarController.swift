@@ -6,6 +6,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     var onToggle: (() -> Void)?
     var onMode: ((ActivationMode) -> Void)?
+    var onShortcut: (() -> Void)?
     var onModel: ((WhisperModel) -> Void)?
     var onDevice: ((String) -> Void)?
     var onDownload: ((WhisperModel) -> Void)?
@@ -13,6 +14,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     var recording = false { didSet { refresh() } }
     var downloading = false { didSet { refresh() } }
     var downloadProgress: Double = 0 { didSet { refresh() } }
+    var shortcut = HotKeyShortcut.current { didSet { refresh() } }
 
     override init() {
         super.init()
@@ -39,6 +41,10 @@ final class MenuBarController: NSObject, NSMenuDelegate {
         }
         let modeItem = NSMenuItem(title: "Activation Mode", action: nil, keyEquivalent: "")
         modeItem.submenu = modes; menu.addItem(modeItem)
+        let shortcutItem = NSMenuItem(title: "Shortcut: \(shortcut.displayName)…", action: #selector(shortcutAction), keyEquivalent: "")
+        shortcutItem.target = self
+        shortcutItem.isEnabled = !recording && state != "Transcribing"
+        menu.addItem(shortcutItem)
         let devices = NSMenu()
         for device in AudioInputDeviceManager.availableInputs() {
             let item = NSMenuItem(title: device.name, action: #selector(deviceAction(_:)), keyEquivalent: "")
@@ -65,6 +71,7 @@ final class MenuBarController: NSObject, NSMenuDelegate {
     }
     @objc private func toggleAction() { onToggle?() }
     @objc private func modeAction(_ sender: NSMenuItem) { guard let raw = sender.representedObject as? String, let mode = ActivationMode(rawValue: raw) else { return }; onMode?(mode) }
+    @objc private func shortcutAction() { onShortcut?() }
     @objc private func modelAction(_ sender: NSMenuItem) { guard let id = sender.representedObject as? String, let model = WhisperModel.all.first(where: { $0.id == id }) else { return }; onModel?(model) }
     @objc private func deviceAction(_ sender: NSMenuItem) { if let id = sender.representedObject as? String { onDevice?(id) } }
     @objc private func openMicrophone() { NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone")!) }

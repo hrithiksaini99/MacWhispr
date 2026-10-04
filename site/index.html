@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ec">
+  <title>MacWhispr — Local voice dictation for Mac</title>
+  <meta name="description" content="Turn speech into text in the app you use. MacWhispr brings local whisper.cpp dictation, a focused voice capsule, and your own shortcut to macOS.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MacWhispr — Your thoughts. Already in words.">
+  <meta property="og:description" content="A small voice companion for your Mac. Local transcription. A shortcut away.">
+  <meta property="og:image" content="assets/brand/social-card.png">
+  <meta property="og:image:alt" content="MacWhispr, local voice dictation for Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MacWhispr — Local voice dictation for Mac">
+  <meta name="twitter:description" content="Your thoughts. Already in words.">
+  <meta name="twitter:image" content="assets/brand/social-card.png">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="island-nav" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="MacWhispr home" aria-current="page"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a>
+      <div class="desktop-nav"><a href="#experience">The experience</a><a href="#setup">Getting started</a><a href="#questions">Questions</a></div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-dialog" aria-label="Open navigation"><span></span><span></span></button>
+    </nav>
+  </header>
+  <div class="menu-dialog" id="menu-dialog" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-content"><p class="eyebrow">A little space to think</p><nav aria-label="Expanded navigation"><a href="#experience">The experience</a><a href="#setup">Getting started</a><a href="#questions">Questions</a><a href="setup.html">Setup guide</a></nav><p class="menu-footnote">Made for your Mac. Built by Hrithik Saini.</p></div>
+  </div>
+
+  <main id="main">
+    <section class="hero section-shell" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span>Local voice dictation for Mac</p>
+        <h1 id="hero-title">Your thoughts.<br>Already in words.</h1>
+        <p class="hero-description">A small voice companion for your Mac. Speak, finish, and let local transcription put your words into the app you are using.</p>
+        <a class="button button-dark" href="#get">Get MacWhispr</a>
+        <p class="cta-note">No account. No API key. Yours to explore.</p>
+        <div class="hero-proof"><span>macOS 13 and later</span><span aria-hidden="true">·</span><span>Built for macOS</span><span aria-hidden="true">·</span><span>Powered by whisper.cpp</span></div>
+      </div>
+      <div class="demo-stage reveal" aria-label="An illustrative demo of MacWhispr">
+        <div class="demo-note"><span class="mini-mark" aria-hidden="true">W</span><span>Less typing. More thinking.</span><span class="demo-indication">Illustrative demo</span></div>
+        <div class="writing-window">
+          <div class="window-top"><div class="traffic-lights" aria-hidden="true"><span></span><span></span><span></span></div><span>Notes / A thought worth keeping</span><span class="window-shortcut">⌃ Space</span></div>
+          <div class="writing-body"><p class="document-label">A thought worth keeping</p><p class="document-text" id="demo-text">The best ideas rarely arrive at a desk.<br>Give them a little room.</p><span class="text-caret" aria-hidden="true"></span></div>
+          <div class="document-foot"><span id="demo-hint">Your next thought starts with your voice.</span><span class="demo-no-mic">No microphone access</span></div>
+        </div>
+        <div class="demo-capsule" data-state="idle" aria-hidden="true">
+          <svg class="capsule-mark" viewBox="0 0 32 32" fill="none"><path d="M3 10L9 24L16 8L23 24L29 10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="capsule-label"><span>MACWHISPR</span><strong id="capsule-status">Ready when you are</strong></div>
+          <div class="capsule-signal"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="capsule-end"><span></span></span>
+        </div>
+        <div class="demo-controls"><button class="demo-button" id="demo-play" type="button">Play the demo<span class="play-symbol" aria-hidden="true">▸</span></button><p id="demo-status" class="demo-status" role="status" aria-live="polite">A preview of the experience. No audio is recorded.</p></div>
+      </div>
+    </section>
+
+    <section class="experience section-shell" id="experience" aria-labelledby="experience-title">
+      <div class="section-intro reveal"><p class="eyebrow">A lighter way to write</p><h2 id="experience-title">Stay with the thought.<br>Let your voice do the typing.</h2><p>For the reply you have already rehearsed, the note you do not want to lose, and the first draft that is easier to say out loud.</p></div>
+      <div class="benefits">
+        <article class="benefit reveal"><span class="section-number">01</span><h3>Keep your train<br>of thought.</h3><p>Press your shortcut from the app you are using. A focused capsule appears above your work, so you can speak without opening another workspace.</p><div class="benefit-detail shortcut-detail"><kbd>⌃</kbd><kbd>Space</kbd><span>Yours to change</span></div></article>
+        <article class="benefit reveal"><span class="section-number">02</span><h3>Keep the work<br>on your Mac.</h3><p>Your recording goes to a local Whisper model, rather than a cloud transcription service. Download a model once, then dictate without a network connection.</p><div class="benefit-detail"><span class="local-signal" aria-hidden="true"></span><span>Local transcription</span></div></article>
+        <article class="benefit reveal"><span class="section-number">03</span><h3>Make it feel<br>like your own.</h3><p>Record your own shortcut, choose a microphone and model, then use Toggle or Push to Talk. A small menu keeps every choice within reach.</p><div class="benefit-detail"><span class="mode-label">Toggle</span><span class="mode-divider" aria-hidden="true">/</span><span class="mode-label">Push to Talk</span></div></article>
+      </div>
+    </section>
+
+    <section class="setup section-shell" id="setup" aria-labelledby="setup-title">
+      <div class="setup-heading reveal"><p class="eyebrow">From thought to text</p><h2 id="setup-title">A little setup.<br>A simple daily ritual.</h2><p>MacWhispr lives in your menu bar.<br>Here is how to get it ready.</p></div>
+      <ol class="setup-steps">
+        <li class="setup-step reveal"><span class="step-number">1</span><div><h3>Get MacWhispr.</h3><p>Move MacWhispr into Applications. The packaged preview includes the whisper.cpp engine for Apple Silicon.</p><a class="text-link" href="setup.html">Read the setup guide <span aria-hidden="true">↗</span></a></div></li>
+        <li class="setup-step reveal"><span class="step-number">2</span><div><h3>Set up your voice.</h3><p>Choose a model in the menu bar and let it download. Allow Microphone access to record and Accessibility access to paste automatically.</p></div></li>
+        <li class="setup-step reveal"><span class="step-number">3</span><div><h3>Speak where you write.</h3><p>Focus a text field, press your shortcut, and speak. Press again to finish. MacWhispr transcribes and pastes your words into that app.</p><p class="step-aside">Control Space is the default, and it is yours to change.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="tagline-section section-shell" aria-labelledby="tagline-title"><p class="eyebrow reveal">Leave room for the idea</p><h2 class="word-reveal" id="tagline-title"><span>Less</span> <span>between</span> <span>you</span><br><span>and</span> <span>what</span> <span>you</span> <span>mean.</span></h2><p class="tagline-note reveal">One shortcut. Your voice. The app you already use.</p></section>
+
+    <section class="source-section section-shell" aria-labelledby="source-title"><div class="source-panel reveal"><div class="source-art" aria-hidden="true"><svg viewBox="0 0 160 160" fill="none"><path d="M25 56L50 114L80 46L110 114L135 56" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Made for macOS</span></div><div class="source-copy"><p class="eyebrow">Local by design</p><h2 id="source-title">Your voice stays<br>close to home.</h2><p>MacWhispr records a temporary audio file, runs your chosen Whisper model on your Mac, and puts the finished transcript into the app you were using.</p><p class="source-details">No account system. No cloud transcription API. No subscription to manage.</p><a class="text-link light-link" href="privacy.html">See the privacy details <span aria-hidden="true">↗</span></a></div></div></section>
+
+    <section class="faq section-shell" id="questions" aria-labelledby="faq-title"><div class="faq-heading reveal"><p class="eyebrow">A few useful details</p><h2 id="faq-title">Before you<br>find your flow.</h2></div><div class="faq-list reveal">
+      <details><summary>Which Macs does MacWhispr support?<span aria-hidden="true">+</span></summary><div><p>MacWhispr targets macOS 13 or later. It has been built and exercised on Apple Silicon. Intel is supported by the package configuration and engine lookup paths, but has not yet been verified on an Intel Mac.</p></div></details>
+      <details><summary>Does my audio leave my Mac?<span aria-hidden="true">+</span></summary><div><p>MacWhispr transcribes your recording locally through whisper.cpp. Audio is not uploaded for transcription. Temporary recordings are removed after processing, although an abrupt exit can leave temporary files behind. Your latest transcript stays on the clipboard.</p><p>Model downloads contact Hugging Face. See the <a href="privacy.html">privacy details</a> for storage and logging information.</p></div></details>
+      <details><summary>Do I need an internet connection?<span aria-hidden="true">+</span></summary><div><p>You need internet access to download MacWhispr and a model. The Apple Silicon preview includes the transcription engine. Once a model is installed, recording and transcription run locally without a network connection.</p></div></details>
+      <details><summary>How does it put text into another app?<span aria-hidden="true">+</span></summary><div><p>MacWhispr remembers the app that was active when recording started, puts the transcript on the clipboard, and sends Command V with Accessibility permission. You can paste manually if that permission is unavailable. Some secure fields and apps may reject automated paste.</p></div></details>
+      <details><summary>Can I personalize the shortcut?<span aria-hidden="true">+</span></summary><div><p>Yes. Open Shortcut in the menu and press a combination using Command, Option, or Control. MacWhispr checks that the shortcut is available before saving it. The menu also includes microphone, model, Toggle, and Push to Talk choices.</p></div></details>
+      <details><summary>Is there an account, API key, or subscription?<span aria-hidden="true">+</span></summary><div><p>No. MacWhispr uses a local engine and model files. The developer preview does not require an account or paid API service. You will need space for a model, a compatible Mac, and the system permissions described in the setup guide.</p></div></details>
+    </div></section>
+
+    <section class="final-cta section-shell" id="get" aria-labelledby="final-title"><div class="reveal"><img class="final-icon" src="assets/brand/app-icon.png" width="80" height="80" alt="MacWhispr app icon"><p class="eyebrow">Your next thought is waiting</p><h2 id="final-title">Give it a voice.</h2><p>A small companion for the words<br>you have been meaning to write.</p><a class="button button-dark" href="setup.html">Get MacWhispr</a><p class="cta-note">Developer preview for Apple Silicon. Apple signing is pending.</p></div></section>
+  </main>
+
+  <footer class="site-footer section-shell"><a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a><p>Made by <a href="https://github.com/hrithiksaini99">Hrithik Saini</a>.</p><nav aria-label="Footer navigation"><a href="setup.html">Setup guide</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></footer>
+</body>
+</html>

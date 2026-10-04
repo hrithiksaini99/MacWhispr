@@ -7,3 +7,9 @@ dist/
 *.wav
 *.aiff
 *.bin
+
+# Generated release artifacts
+site/downloads/
+Assets/AppIcon.iconset/
+*.dmg
+*.zip
