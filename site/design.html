@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ec">
+  <title>Inside the design — MacWhispr</title>
+  <meta name="description" content="Explore the interaction, visual language, and native architecture behind MacWhispr.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Inside the design of MacWhispr">
+  <meta property="og:description" content="An interactive look at the capsule, motion, focus model, and local transcription path.">
+  <meta property="og:image" content="assets/brand/social-card.png">
+  <meta property="og:image:alt" content="MacWhispr, local voice dictation for Mac">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+  <script defer src="design.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="island-nav" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a>
+      <div class="desktop-nav"><a href="index.html">Home</a><a href="#interaction" aria-current="page">Design story</a><a href="#architecture">Architecture</a></div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-dialog" aria-label="Open navigation"><span></span><span></span></button>
+    </nav>
+  </header>
+  <div class="menu-dialog" id="menu-dialog" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-content"><p class="eyebrow">Inside the design</p><nav aria-label="Expanded navigation"><a href="index.html">Home</a><a href="#interaction">The capsule</a><a href="#principles">Design principles</a><a href="#architecture">Architecture</a></nav><p class="menu-footnote">One small surface. Four clear moments.</p></div>
+  </div>
+
+  <main id="main">
+    <section class="design-hero section-shell" aria-labelledby="design-title">
+      <div class="design-hero-copy reveal">
+        <p class="eyebrow">Inside MacWhispr</p>
+        <h1 id="design-title">A voice interface<br>with almost no interface.</h1>
+        <p>MacWhispr was designed around a simple constraint: acknowledge every action without pulling attention away from the words. Explore how the capsule communicates state, speed, and trust.</p>
+      </div>
+      <div class="design-orbit reveal" aria-hidden="true"><span>Shortcut</span><span>Listen</span><span>Transcribe</span><span>Insert</span><div><img src="assets/brand/app-icon.png" width="96" height="96" alt=""></div></div>
+    </section>
+
+    <section class="design-lab section-shell" id="interaction" aria-labelledby="interaction-title">
+      <div class="section-intro reveal"><p class="eyebrow">The interaction loop</p><h2 id="interaction-title">Every state answers<br>one human question.</h2><p>Choose a moment to see what the capsule shows and why it changes. The preview is illustrative and never accesses your microphone.</p></div>
+      <div class="state-lab reveal">
+        <div class="state-selector" role="tablist" aria-label="Capsule states">
+          <button class="state-tab is-selected" type="button" role="tab" aria-selected="true" data-design-state="idle"><span>01</span><strong>Ready</strong><small>Can I begin?</small></button>
+          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="listening"><span>02</span><strong>Listening</strong><small>Can it hear me?</small></button>
+          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="processing"><span>03</span><strong>Transcribing</strong><small>Is it working?</small></button>
+          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="pasted"><span>04</span><strong>Inserted</strong><small>Did it finish?</small></button>
+        </div>
+        <div class="state-preview">
+          <p class="preview-context">Active app remains in focus</p>
+          <div class="demo-capsule design-capsule" data-state="idle" aria-label="Ready capsule preview">
+            <svg class="capsule-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 10L9 24L16 8L23 24L29 10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="capsule-label"><span>MACWHISPR</span><strong id="design-capsule-label">Ready when you are</strong></div>
+            <div class="capsule-signal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="capsule-end" aria-hidden="true"><span></span></span>
+          </div>
+          <div class="state-rationale" aria-live="polite"><p class="eyebrow" id="design-state-kicker">Immediate acknowledgement</p><h3 id="design-state-title">Ready before the thought moves on.</h3><p id="design-state-copy">The capsule appears close to the bottom edge, above the active app, without taking keyboard focus. The response is immediate so the shortcut feels connected to the result.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="principles-section section-shell" id="principles" aria-labelledby="principles-title">
+      <div class="section-intro reveal"><p class="eyebrow">The visual language</p><h2 id="principles-title">Quiet enough for work.<br>Distinct enough to trust.</h2><p>Every design choice supports focus, clarity, or perceived responsiveness.</p></div>
+      <div class="principle-grid">
+        <article class="principle-card reveal"><span class="principle-swatch graphite" aria-hidden="true"></span><p class="eyebrow">Graphite surface</p><h3>Present, without becoming a window.</h3><p>The dark capsule separates itself from any document while its compact footprint keeps the work underneath visible.</p></article>
+        <article class="principle-card reveal"><span class="principle-swatch mint" aria-hidden="true"></span><p class="eyebrow">Mint signal</p><h3>One color carries the action.</h3><p>Mint marks live audio, processing traces, and completion. The repeated cue makes each state readable at a glance.</p></article>
+        <article class="principle-card reveal"><div class="motion-study" aria-hidden="true"><i></i><i></i><i></i></div><p class="eyebrow">Truthful motion</p><h3>Activity without a false promise.</h3><p>Directional traces show that transcription is active. They never pretend to know a completion percentage the engine cannot provide.</p></article>
+      </div>
+    </section>
+
+    <section class="architecture-section section-shell" id="architecture" aria-labelledby="architecture-title">
+      <div class="architecture-copy reveal"><p class="eyebrow">Built for the platform</p><h2 id="architecture-title">A short path from<br>voice to words.</h2><p>The app keeps the recording and transcription path on the Mac. AppKit owns system behavior, SwiftUI draws the capsule, and a pinned whisper.cpp engine turns temporary audio into text.</p><a class="text-link" href="https://github.com/hrithiksaini99/MacWhispr">Explore the source <span aria-hidden="true">↗</span></a></div>
+      <ol class="architecture-flow reveal" aria-label="MacWhispr transcription flow">
+        <li><span>1</span><div><strong>Personal shortcut</strong><small>Carbon global hot key</small></div></li>
+        <li><span>2</span><div><strong>Local recording</strong><small>AVFoundation audio capture</small></div></li>
+        <li><span>3</span><div><strong>Local transcription</strong><small>Bundled whisper.cpp engine</small></div></li>
+        <li><span>4</span><div><strong>Return to the thought</strong><small>Clipboard and Accessibility paste</small></div></li>
+      </ol>
+    </section>
+
+    <section class="final-cta section-shell" aria-labelledby="design-final-title"><div class="reveal"><img class="final-icon" src="assets/brand/app-icon.png" width="80" height="80" alt="MacWhispr app icon"><p class="eyebrow">Designed around attention</p><h2 id="design-final-title">Say it. See it. Continue.</h2><p>Explore the complete product story<br>and the local first experience.</p><a class="button button-dark" href="index.html">Visit MacWhispr</a></div></section>
+  </main>
+
+  <footer class="site-footer section-shell"><a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a><p>Made by <a href="https://github.com/hrithiksaini99">Hrithik Saini</a>.</p><nav aria-label="Footer navigation"><a href="design.html" aria-current="page">Design story</a><a href="setup.html">Setup guide</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></footer>
+</body>
+</html>

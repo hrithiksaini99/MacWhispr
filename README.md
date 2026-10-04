@@ -11,9 +11,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/hrithiksaini99/MacWhispr/releases">Download MacWhispr</a>
+  <a href="https://hrithiksaini99.github.io/MacWhispr/">Website</a>
   ·
-  <a href="site/privacy.html">Privacy</a>
+  <a href="https://hrithiksaini99.github.io/MacWhispr/design.html">Interactive design story</a>
+  ·
+  <a href="https://github.com/hrithiksaini99/MacWhispr/releases">Releases</a>
 </p>
 
 ![MacWhispr — local voice dictation for your Mac](site/assets/brand/social-card.png)
