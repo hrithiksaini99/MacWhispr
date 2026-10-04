@@ -13,12 +13,26 @@
 <p align="center">
   <a href="https://hrithiksaini99.github.io/MacWhispr/">Website</a>
   ·
-  <a href="https://hrithiksaini99.github.io/MacWhispr/design.html">Interactive design story</a>
+  <a href="https://hrithiksaini99.github.io/MacWhispr/design.html">Interactive technical blueprint</a>
   ·
   <a href="https://github.com/hrithiksaini99/MacWhispr/releases">Releases</a>
 </p>
 
 ![MacWhispr — local voice dictation for your Mac](site/assets/brand/social-card.png)
+
+## Installation
+
+1. Download the latest `.dmg` release from the [Releases page](https://github.com/hrithiksaini99/MacWhispr/releases/latest).
+2. Open the `.dmg` file and drag **MacWhispr.app** to your **Applications** folder.
+3. Launch MacWhispr from Applications or Spotlight. It will appear in your menu bar.
+4. On first run, grant **Microphone** access for recording and **Accessibility** access (in System Settings → Privacy & Security) so MacWhispr can automatically paste transcribed text.
+
+## Usage
+
+1. **Select a Model:** Click the MacWhispr menu bar icon and choose a model to download (Base English is recommended).
+2. **Dictate:** Place your text cursor in any application where you want to type.
+3. **Trigger:** Press the default shortcut **Control-Space** (or your custom shortcut) to start dictating.
+4. **Finish:** Speak your thought, then press the shortcut again. MacWhispr will process your speech locally and insert the transcribed text directly into the active app.
 
 ## Designed to stay out of the way
 
@@ -86,6 +100,10 @@ Automatic insertion requires Accessibility permission because macOS protects con
 
 ## Availability
 
-MacWhispr 0.2 is prepared for Apple Silicon Macs and targets macOS 13 or later. The downloadable production build will be published on the [Releases page](https://github.com/hrithiksaini99/MacWhispr/releases) after Developer ID signing, notarization, and oldest supported system testing are complete.
+MacWhispr is available for Apple Silicon Macs running macOS 13 or later. You can download the latest `.dmg` from the [Releases page](https://github.com/hrithiksaini99/MacWhispr/releases). Note: As an open-source project without a paid Apple Developer ID, you may need to right-click and select "Open" the first time you launch the app to bypass Gatekeeper.
 
-Copyright © 2026 **Hrithik Saini**. App and brand rights are reserved. whisper.cpp, model files, and Manrope remain under their respective licenses; see [third party notices](docs/THIRD_PARTY_NOTICES.md).
+## License
+
+MacWhispr is open-source software licensed under the [MIT License](LICENSE).
+
+whisper.cpp, model files, and Manrope remain under their respective licenses; see [third party notices](docs/THIRD_PARTY_NOTICES.md).

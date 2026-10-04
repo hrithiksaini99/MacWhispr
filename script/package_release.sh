@@ -53,10 +53,13 @@ if [[ -n "${MACWHISPR_NOTARY_PROFILE:-}" ]]; then
   spctl --assess --type execute --verbose "$APP"
   ditto -c -k --sequesterRsrc --keepParent "$APP" "$OUT/$NAME.zip"
 fi
+hdiutil create -volname "MacWhispr" -srcfolder "$APP" -ov -format UDZO "$OUT/$NAME.dmg"
 (cd "$OUT" && shasum -a 256 "$NAME.zip" > "$NAME.sha256")
+(cd "$OUT" && shasum -a 256 "$NAME.dmg" > "${NAME}_dmg.sha256")
 if [[ "$IDENTITY" == '-' ]]; then
-  printf '\nDEVELOPER PREVIEW: ad hoc signed, not notarized. Apple Developer ID signing is required before a public release.\n'
+  printf '\nOPEN SOURCE BUILD: ad hoc signed, not notarized. Users may need to right-click to open to bypass Gatekeeper.\n'
 else
   printf '\nDeveloper ID package created. Notarization: %s\n' "${MACWHISPR_NOTARY_PROFILE:-not submitted}"
 fi
 printf 'Archive: %s\n' "$OUT/$NAME.zip"
+printf 'Disk Image: %s\n' "$OUT/$NAME.dmg"

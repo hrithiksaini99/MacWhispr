@@ -1,6 +1,6 @@
 # Third party notices
 
-MacWhispr is created by Hrithik Saini. Copyright © 2026 Hrithik Saini. All rights reserved. No license to redistribute or modify MacWhispr source is granted by the presence of a source repository.
+MacWhispr is created by Hrithik Saini and licensed under the MIT License. See the LICENSE file for details.
 
 ## Speech engine
 

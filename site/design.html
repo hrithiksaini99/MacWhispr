@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f3ec">
-  <title>Inside the design — MacWhispr</title>
-  <meta name="description" content="Explore the interaction, visual language, and native architecture behind MacWhispr.">
+  <title>Technical blueprint — MacWhispr</title>
+  <meta name="description" content="An interactive, component by component blueprint for building a native local dictation app for macOS.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Inside the design of MacWhispr">
-  <meta property="og:description" content="An interactive look at the capsule, motion, focus model, and local transcription path.">
+  <meta property="og:title" content="MacWhispr technical blueprint">
+  <meta property="og:description" content="Explore the components, data flow, platform APIs, failure handling, and build sequence behind MacWhispr.">
   <meta property="og:image" content="assets/brand/social-card.png">
   <meta property="og:image:alt" content="MacWhispr, local voice dictation for Mac">
   <meta name="twitter:card" content="summary_large_image">
@@ -24,68 +24,117 @@
   <header class="site-header">
     <nav class="island-nav" aria-label="Main navigation">
       <a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a>
-      <div class="desktop-nav"><a href="index.html">Home</a><a href="#interaction" aria-current="page">Design story</a><a href="#architecture">Architecture</a></div>
+      <div class="desktop-nav"><a href="index.html">Home</a><a href="#components" aria-current="page">Components</a><a href="#sequence">Build sequence</a><a href="#source-map">Source map</a></div>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-dialog" aria-label="Open navigation"><span></span><span></span></button>
     </nav>
   </header>
   <div class="menu-dialog" id="menu-dialog" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
-    <div class="menu-content"><p class="eyebrow">Inside the design</p><nav aria-label="Expanded navigation"><a href="index.html">Home</a><a href="#interaction">The capsule</a><a href="#principles">Design principles</a><a href="#architecture">Architecture</a></nav><p class="menu-footnote">One small surface. Four clear moments.</p></div>
+    <div class="menu-content"><p class="eyebrow">Technical blueprint</p><nav aria-label="Expanded navigation"><a href="index.html">Home</a><a href="#components">Components</a><a href="#data-flow">Data flow</a><a href="#sequence">Build sequence</a><a href="#source-map">Source map</a></nav><p class="menu-footnote">Nine components. One local dictation loop.</p></div>
   </div>
 
   <main id="main">
-    <section class="design-hero section-shell" aria-labelledby="design-title">
-      <div class="design-hero-copy reveal">
-        <p class="eyebrow">Inside MacWhispr</p>
-        <h1 id="design-title">A voice interface<br>with almost no interface.</h1>
-        <p>MacWhispr was designed around a simple constraint: acknowledge every action without pulling attention away from the words. Explore how the capsule communicates state, speed, and trust.</p>
+    <section class="blueprint-hero section-shell" aria-labelledby="blueprint-title">
+      <div class="blueprint-hero-copy reveal">
+        <p class="eyebrow">Build MacWhispr from first principles</p>
+        <h1 id="blueprint-title">The complete<br>technical blueprint.</h1>
+        <p>Explore every runtime component, the data passed between them, the macOS APIs involved, and the failure cases that matter. The architecture below mirrors the current Swift source.</p>
+        <a class="button button-dark" href="#components">Inspect the architecture</a>
       </div>
-      <div class="design-orbit reveal" aria-hidden="true"><span>Shortcut</span><span>Listen</span><span>Transcribe</span><span>Insert</span><div><img src="assets/brand/app-icon.png" width="96" height="96" alt=""></div></div>
+      <div class="blueprint-summary reveal" aria-label="MacWhispr technology summary">
+        <div><span>Language</span><strong>Swift 5.10</strong></div>
+        <div><span>Interface</span><strong>AppKit and SwiftUI</strong></div>
+        <div><span>Audio</span><strong>16 kHz mono PCM</strong></div>
+        <div><span>Inference</span><strong>whisper.cpp process</strong></div>
+        <div><span>Minimum system</span><strong>macOS 13</strong></div>
+        <div><span>Distribution</span><strong>SwiftPM app bundle</strong></div>
+      </div>
     </section>
 
-    <section class="design-lab section-shell" id="interaction" aria-labelledby="interaction-title">
-      <div class="section-intro reveal"><p class="eyebrow">The interaction loop</p><h2 id="interaction-title">Every state answers<br>one human question.</h2><p>Choose a moment to see what the capsule shows and why it changes. The preview is illustrative and never accesses your microphone.</p></div>
-      <div class="state-lab reveal">
-        <div class="state-selector" role="tablist" aria-label="Capsule states">
-          <button class="state-tab is-selected" type="button" role="tab" aria-selected="true" data-design-state="idle"><span>01</span><strong>Ready</strong><small>Can I begin?</small></button>
-          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="listening"><span>02</span><strong>Listening</strong><small>Can it hear me?</small></button>
-          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="processing"><span>03</span><strong>Transcribing</strong><small>Is it working?</small></button>
-          <button class="state-tab" type="button" role="tab" aria-selected="false" data-design-state="pasted"><span>04</span><strong>Inserted</strong><small>Did it finish?</small></button>
+    <section class="component-section section-shell" id="components" aria-labelledby="components-title">
+      <div class="section-intro reveal"><p class="eyebrow">Interactive component map</p><h2 id="components-title">Select a component.<br>See its complete contract.</h2><p>Each node explains its responsibility, platform APIs, inputs, outputs, safeguards, and the source file that implements it.</p></div>
+      <div class="component-workbench reveal">
+        <div class="component-map" role="tablist" aria-label="MacWhispr components">
+          <button class="component-node is-selected" type="button" role="tab" aria-selected="true" data-component="orchestrator"><span>01</span><strong>App orchestrator</strong><small>Lifecycle and state machine</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="menu"><span>02</span><strong>Menu bar</strong><small>Settings and status</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="shortcut"><span>03</span><strong>Shortcut system</strong><small>Capture and Carbon registration</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="audio"><span>04</span><strong>Audio capture</strong><small>Device selection and metering</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="models"><span>05</span><strong>Model manager</strong><small>Download and validation</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="transcriber"><span>06</span><strong>Transcriber</strong><small>Process isolation and timeout</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="capsule"><span>07</span><strong>Capsule</strong><small>Nonactivating feedback UI</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="paste"><span>08</span><strong>Paste bridge</strong><small>Return text to the active app</small></button>
+          <button class="component-node" type="button" role="tab" aria-selected="false" data-component="release"><span>09</span><strong>Release pipeline</strong><small>Bundle, sign, and notarize</small></button>
         </div>
-        <div class="state-preview">
-          <p class="preview-context">Active app remains in focus</p>
-          <div class="demo-capsule design-capsule" data-state="idle" aria-label="Ready capsule preview">
-            <svg class="capsule-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M3 10L9 24L16 8L23 24L29 10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div class="capsule-label"><span>MACWHISPR</span><strong id="design-capsule-label">Ready when you are</strong></div>
-            <div class="capsule-signal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <span class="capsule-end" aria-hidden="true"><span></span></span>
-          </div>
-          <div class="state-rationale" aria-live="polite"><p class="eyebrow" id="design-state-kicker">Immediate acknowledgement</p><h3 id="design-state-title">Ready before the thought moves on.</h3><p id="design-state-copy">The capsule appears close to the bottom edge, above the active app, without taking keyboard focus. The response is immediate so the shortcut feels connected to the result.</p></div>
-        </div>
+        <article class="component-inspector" aria-live="polite">
+          <div class="inspector-heading"><p class="eyebrow" id="component-layer">Application layer</p><h3 id="component-title">AppDelegate is the coordinator.</h3><p id="component-purpose">It owns the complete dictation state machine, connects every callback, remembers the previously active app, and keeps exactly one transcription task alive.</p></div>
+          <dl class="contract-grid">
+            <div><dt>Platform APIs</dt><dd id="component-apis">NSApplication, NSWorkspace, UserNotifications, Carbon</dd></div>
+            <div><dt>Receives</dt><dd id="component-input">Hot key events, menu actions, audio levels, model choices</dd></div>
+            <div><dt>Produces</dt><dd id="component-output">Recording, transcribing, pasted, and failure transitions</dd></div>
+            <div><dt>Guardrail</dt><dd id="component-guardrail">Separate recording and busy flags prevent overlapping capture and inference.</dd></div>
+          </dl>
+          <div class="implementation-note"><p class="eyebrow">Implementation shape</p><pre><code id="component-code">hot key → start recording&#10;hot key → stop recording&#10;Task → transcribe → reactivate app → paste</code></pre></div>
+          <a class="text-link inspector-source" id="component-source" href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/main.swift">Open main.swift <span aria-hidden="true">↗</span></a>
+        </article>
       </div>
     </section>
 
-    <section class="principles-section section-shell" id="principles" aria-labelledby="principles-title">
-      <div class="section-intro reveal"><p class="eyebrow">The visual language</p><h2 id="principles-title">Quiet enough for work.<br>Distinct enough to trust.</h2><p>Every design choice supports focus, clarity, or perceived responsiveness.</p></div>
-      <div class="principle-grid">
-        <article class="principle-card reveal"><span class="principle-swatch graphite" aria-hidden="true"></span><p class="eyebrow">Graphite surface</p><h3>Present, without becoming a window.</h3><p>The dark capsule separates itself from any document while its compact footprint keeps the work underneath visible.</p></article>
-        <article class="principle-card reveal"><span class="principle-swatch mint" aria-hidden="true"></span><p class="eyebrow">Mint signal</p><h3>One color carries the action.</h3><p>Mint marks live audio, processing traces, and completion. The repeated cue makes each state readable at a glance.</p></article>
-        <article class="principle-card reveal"><div class="motion-study" aria-hidden="true"><i></i><i></i><i></i></div><p class="eyebrow">Truthful motion</p><h3>Activity without a false promise.</h3><p>Directional traces show that transcription is active. They never pretend to know a completion percentage the engine cannot provide.</p></article>
+    <section class="flow-section section-shell" id="data-flow" aria-labelledby="flow-title">
+      <div class="section-intro reveal"><p class="eyebrow">Runtime data flow</p><h2 id="flow-title">One shortcut becomes<br>one inserted transcript.</h2><p>The app passes small, explicit artifacts between components. Temporary audio and process output are deleted after the operation.</p></div>
+      <ol class="runtime-flow reveal">
+        <li><span class="flow-index">1</span><div><strong>Carbon event</strong><small>Key code plus modifier flags</small></div><b aria-hidden="true">→</b></li>
+        <li><span class="flow-index">2</span><div><strong>WAV file</strong><small>16 kHz, mono, 16 bit PCM</small></div><b aria-hidden="true">→</b></li>
+        <li><span class="flow-index">3</span><div><strong>Engine process</strong><small>Audio path plus GGML model path</small></div><b aria-hidden="true">→</b></li>
+        <li><span class="flow-index">4</span><div><strong>Transcript string</strong><small>Trimmed standard output</small></div><b aria-hidden="true">→</b></li>
+        <li><span class="flow-index">5</span><div><strong>Active text field</strong><small>Pasteboard plus Command V event</small></div></li>
+      </ol>
+      <div class="flow-details reveal">
+        <article><p class="eyebrow">Capture contract</p><h3>Record for inference, meter for feedback.</h3><p><code>AVAudioRecorder</code> writes the model ready WAV while a 50 ms timer reads peak decibels. The highest sample also rejects recordings with no usable speech before inference begins.</p></article>
+        <article><p class="eyebrow">Process contract</p><h3>Keep engine output off memory pipes.</h3><p>The child process writes stdout and stderr to private temporary files. This avoids a deadlock when a verbose backend fills a pipe, bounds diagnostics, and gives cancellation one process to terminate.</p></article>
+        <article><p class="eyebrow">Focus contract</p><h3>Remember where the thought started.</h3><p>The frontmost application is captured before recording. After transcription it is reactivated, allowed 120 ms to regain focus, then receives a synthetic Command V after the text reaches the pasteboard.</p></article>
       </div>
     </section>
 
-    <section class="architecture-section section-shell" id="architecture" aria-labelledby="architecture-title">
-      <div class="architecture-copy reveal"><p class="eyebrow">Built for the platform</p><h2 id="architecture-title">A short path from<br>voice to words.</h2><p>The app keeps the recording and transcription path on the Mac. AppKit owns system behavior, SwiftUI draws the capsule, and a pinned whisper.cpp engine turns temporary audio into text.</p><a class="text-link" href="https://github.com/hrithiksaini99/MacWhispr">Explore the source <span aria-hidden="true">↗</span></a></div>
-      <ol class="architecture-flow reveal" aria-label="MacWhispr transcription flow">
-        <li><span>1</span><div><strong>Personal shortcut</strong><small>Carbon global hot key</small></div></li>
-        <li><span>2</span><div><strong>Local recording</strong><small>AVFoundation audio capture</small></div></li>
-        <li><span>3</span><div><strong>Local transcription</strong><small>Bundled whisper.cpp engine</small></div></li>
-        <li><span>4</span><div><strong>Return to the thought</strong><small>Clipboard and Accessibility paste</small></div></li>
+    <section class="sequence-section section-shell" id="sequence" aria-labelledby="sequence-title">
+      <div class="sequence-heading reveal"><p class="eyebrow">Build it in dependency order</p><h2 id="sequence-title">Seven layers.<br>A test after each one.</h2><p>This order keeps platform permissions, process control, and interface polish from becoming one large debugging problem.</p></div>
+      <ol class="build-sequence">
+        <li class="reveal"><span>01</span><div><h3>Create the accessory app shell.</h3><p>Build a SwiftPM executable, start <code>NSApplication</code> manually, set the activation policy to accessory, add <code>LSUIElement</code>, and create an <code>NSStatusItem</code>.</p><small>Checkpoint: the app launches with a menu bar icon and no Dock icon.</small></div></li>
+        <li class="reveal"><span>02</span><div><h3>Register one global shortcut.</h3><p>Install a Carbon event handler for pressed and released events. Translate <code>NSEvent</code> key codes into Carbon modifiers and register the combination with a stable signature and ID.</p><small>Checkpoint: Toggle and Push to Talk both produce deterministic start and stop callbacks.</small></div></li>
+        <li class="reveal"><span>03</span><div><h3>Capture model ready audio.</h3><p>Request microphone access, discover input devices, and configure <code>AVAudioRecorder</code> for 16 kHz mono signed PCM. Sample metering every 50 ms.</p><small>Checkpoint: the WAV opens in another audio tool and the meter responds to real speech.</small></div></li>
+        <li class="reveal"><span>04</span><div><h3>Wrap the speech engine.</h3><p>Resolve the bundled helper first, launch it with <code>Process</code>, isolate output on disk, calculate a recording based timeout, and support termination plus a delayed <code>SIGKILL</code>.</p><small>Checkpoint: success, nonzero exit, timeout, and cancellation all clean up their temporary files.</small></div></li>
+        <li class="reveal"><span>05</span><div><h3>Return text without stealing focus.</h3><p>Capture the frontmost app before recording. Put the transcript on <code>NSPasteboard</code>, restore the app, and emit Command V through <code>CGEvent</code> after checking Accessibility trust.</p><small>Checkpoint: dictation begun in a text field returns to that exact app and inserts once.</small></div></li>
+        <li class="reveal"><span>06</span><div><h3>Add honest visual feedback.</h3><p>Host SwiftUI in a borderless, nonactivating <code>NSPanel</code>. Drive the listening canvas from real meter values and use repeating activity traces for transcription.</p><small>Checkpoint: keyboard focus never leaves the destination and Reduce Motion removes continuous animation.</small></div></li>
+        <li class="reveal"><span>07</span><div><h3>Package the runtime as one product.</h3><p>Place the executable, icon, licenses, and statically linked speech helper in the app bundle. Sign the helper before the app, submit the ZIP for notarization, staple, and assess with Gatekeeper.</p><small>Checkpoint: the archived app launches on a clean Apple Silicon Mac without Homebrew.</small></div></li>
       </ol>
     </section>
 
-    <section class="final-cta section-shell" aria-labelledby="design-final-title"><div class="reveal"><img class="final-icon" src="assets/brand/app-icon.png" width="80" height="80" alt="MacWhispr app icon"><p class="eyebrow">Designed around attention</p><h2 id="design-final-title">Say it. See it. Continue.</h2><p>Explore the complete product story<br>and the local first experience.</p><a class="button button-dark" href="index.html">Visit MacWhispr</a></div></section>
+    <section class="decisions-section section-shell" aria-labelledby="decisions-title">
+      <div class="section-intro reveal"><p class="eyebrow">Engineering decisions</p><h2 id="decisions-title">The edges that make<br>the app reliable.</h2><p>These details are easy to miss in a prototype and expensive to discover after shipping.</p></div>
+      <div class="decision-grid">
+        <article class="reveal"><strong>Register before saving</strong><p>A custom shortcut is persisted only after Carbon accepts it. Closing a failed recorder restores the previous working combination.</p></article>
+        <article class="reveal"><strong>Validate the model twice</strong><p>Downloads must pass a size threshold, expected content length check, and the four byte GGML magic value before installation.</p></article>
+        <article class="reveal"><strong>Own the child process</strong><p>The app stores the transcription task, cancels it on quit, terminates the engine, then escalates to <code>SIGKILL</code> after two seconds if needed.</p></article>
+        <article class="reveal"><strong>Preserve the clipboard result</strong><p>If Accessibility is denied, the transcript still stays on the clipboard and the user receives a clear recovery step.</p></article>
+        <article class="reveal"><strong>Do not fake progress</strong><p>Model downloads report real byte progress. Transcription shows activity because whisper.cpp does not expose a trustworthy completion percentage here.</p></article>
+        <article class="reveal"><strong>Delete on every exit path</strong><p>Temporary audio, process output, and diagnostics are removed after success, error, timeout, cancellation, or application termination.</p></article>
+      </div>
+    </section>
+
+    <section class="source-map-section section-shell" id="source-map" aria-labelledby="source-map-title">
+      <div class="source-map-copy reveal"><p class="eyebrow">Read the implementation</p><h2 id="source-map-title">A source map for<br>the whole system.</h2><p>Follow the files in this order to understand the complete control path without jumping around the repository.</p></div>
+      <ol class="source-file-list reveal">
+        <li><span>1</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/main.swift"><strong>main.swift</strong><small>Lifecycle, orchestration, state transitions</small></a></li>
+        <li><span>2</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/Models/HotKeyShortcut.swift"><strong>HotKeyShortcut.swift</strong><small>Shortcut representation and persistence</small></a></li>
+        <li><span>3</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/DictationService.swift"><strong>DictationService.swift</strong><small>Recording, metering, and paste bridge</small></a></li>
+        <li><span>4</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/Transcriber.swift"><strong>Transcriber.swift</strong><small>Inference process and cancellation</small></a></li>
+        <li><span>5</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/Sources/MacWhispr/ModelManager.swift"><strong>ModelManager.swift</strong><small>Model catalog, download, validation</small></a></li>
+        <li><span>6</span><a href="https://github.com/hrithiksaini99/MacWhispr/tree/main/Sources/MacWhispr/Views"><strong>Views</strong><small>Capsule layout and signal canvas</small></a></li>
+        <li><span>7</span><a href="https://github.com/hrithiksaini99/MacWhispr/blob/main/script/package_release.sh"><strong>package_release.sh</strong><small>Bundle assembly and release checks</small></a></li>
+      </ol>
+    </section>
+
+    <section class="final-cta section-shell" aria-labelledby="blueprint-final-title"><div class="reveal"><img class="final-icon" src="assets/brand/app-icon.png" width="80" height="80" alt="MacWhispr app icon"><p class="eyebrow">The complete reference</p><h2 id="blueprint-final-title">Read it. Build it. Improve it.</h2><p>Use the blueprint with the source<br>and make the interaction your own.</p><a class="button button-dark" href="https://github.com/hrithiksaini99/MacWhispr">Explore the repository</a></div></section>
   </main>
 
-  <footer class="site-footer section-shell"><a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a><p>Made by <a href="https://github.com/hrithiksaini99">Hrithik Saini</a>.</p><nav aria-label="Footer navigation"><a href="design.html" aria-current="page">Design story</a><a href="setup.html">Setup guide</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></footer>
+  <footer class="site-footer section-shell"><a class="brand" href="index.html" aria-label="MacWhispr home"><img src="assets/brand/app-icon.png" width="32" height="32" alt=""><span>MacWhispr</span></a><p>Made by <a href="https://github.com/hrithiksaini99">Hrithik Saini</a>.</p><nav aria-label="Footer navigation"><a href="design.html" aria-current="page">Technical blueprint</a><a href="setup.html">Setup guide</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></footer>
 </body>
 </html>
